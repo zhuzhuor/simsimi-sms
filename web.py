@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import os
-from flask import Flask, request, Response
+from flask import Flask, request, Response, abort
 from twilio import twiml
 from twilio.rest import TwilioRestClient
 from raven.contrib.flask import Sentry
@@ -24,8 +24,11 @@ simsimi_client = SimSimi(os.environ.get('SIMSIMI_KEY'))
 
 
 @app.route('/' + ACCESS_TOKEN, methods=['GET'])
-def handle_text(access_token):
-    text_content = request.form['Body']
+def handle_text():
+    try:
+        text_content = request.args['Body']
+    except KeyError:
+        abort(400)
 
     resp = twiml.Response()
     try:
