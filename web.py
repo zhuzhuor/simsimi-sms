@@ -14,7 +14,6 @@ app = Flask(__name__)
 ACCESS_TOKEN = os.environ.get('ACCESS_TOKEN')
 assert ACCESS_TOKEN
 
-TWILIO_NUMBER = os.environ.get('TWILIO_NUMBER')
 twilio_client = TwilioRestClient(
     os.environ.get('TWILIO_SID'),
     os.environ.get('TWILIO_TOKEN')
@@ -34,8 +33,9 @@ def handle_text():
     try:
         simsimi_resp = simsimi_client.get_response(text_content)
         resp.message(simsimi_resp)
-    except SimSimiException:
-        sentry_client.captureException()
+    except SimSimiException as err:
+        if err.code != 404:
+            sentry_client.captureException()
         resp.message(u'哦')
     return Response(resp.toxml(), mimetype='text/xml')
 

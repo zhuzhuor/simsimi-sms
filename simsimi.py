@@ -58,6 +58,7 @@ class SimSimi:
             'ft': self.filter_rate
         }
         resp = requests.get(self.url, params=payload)
+        print resp.url
         resp_json = resp.json()
         if resp_json['result'] == 100:
             return resp_json['response']
