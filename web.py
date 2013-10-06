@@ -40,5 +40,12 @@ def handle_text():
     return Response(resp.toxml(), mimetype='text/xml')
 
 
+@app.route('/' + ACCESS_TOKEN + '/reject_call', methods=['GET'])
+def reject_call():
+    resp = twiml.Response()
+    resp.reject()
+    return Response(resp.toxml(), mimetype='text/xml')
+
+
 if __name__ == '__main__':
     app.run(debug=True)
